@@ -18,6 +18,10 @@ After making the π project, I wanted to keep working with a similar idea. This 
 
 After being inspired from a similar art piece, I wanted to make a program that broke down the digits of π into colors (each number 0-9 has its own color). A line is then added between the colors of two consecutive digits, to make this cool looking design.
 
+## Pong (pong.html)
+
+A very basic game of pong.
+
 ## War (war.html)
 
 This simulation starts with a square divided evenly between green and purple. Each 'round', if two pixels of different color are next to each, they 'fight' (a winner is randomly decided), and whichever one wins turns the other pixel into its own color. The simulation goes on until the whole square is covered in only one color.
