@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html style="height: 100%;">
+
+<body style="background-color: black; height: 100%; margin: 0;">
+    
+    <canvas id="canvas" width="500" height="500" style="display: block; margin-left: auto; margin-right: auto; height: 100%;"></canvas>
+    
+    <script>
+        
+        function getPos(rad) {
+            var angle = 0.628 * rad * 5;
+            return new Array(250 + Math.sin(angle) * 200, 250 - Math.cos(angle) * 200);
+        }
+        
+    </script>
+    
+    <script>
+        
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        
+        var alpha = 0.6;
+        var colors = new Array("rgba(10, 17, 255, "+alpha+")", "rgba(38, 128, 0, "+alpha+")", "rgba(244, 1, 0, "+alpha+")",
+                               "rgba(123, 4, 131, "+alpha+")", "rgba(248, 165, 0, "+alpha+")", "rgba(255, 254, 0, "+alpha+")",
+                               "rgba(250, 192, 203, "+alpha+")", "rgba(178, 216, 231, "+alpha+")", "rgba(156, 238, 137, "+alpha+")",
+                               "rgba(94, 224, 208, "+alpha+")");
+        var newRad = 1.5;
+        for (var i = 0; i < colors.length; i++) {
+            ctx.fillStyle = colors[i];
+            ctx.beginPath();
+            ctx.moveTo(250, 250);
+            ctx.arc(250, 250, 210, newRad * Math.PI, (newRad = newRad + 0.2) * Math.PI);
+            ctx.lineTo(250, 250);
+            ctx.fill();
+        }
+        
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.moveTo(250, 250);
+        ctx.arc(250, 250, 200, 1.5 * Math.PI, 3.5 * Math.PI);
+        ctx.lineTo(250, 250);
+        ctx.fill();
+        
+        var piDecimals = new Array();
+        for (var i = 0; i < 100; i++) {
+            var currentDecimal = Math.floor(Math.PI * Math.pow(10, i) % 10);
+            piDecimals.push(currentDecimal);
+        }
+        /*for (var i = 0; i < 950; i++) {
+            var rand = Math.floor(Math.random() * 10);
+            piDecimals.push(rand);
+        }*/
+        
+        var numbers = piDecimals;
+        var numberRad = new Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8);
+        var oldPos = getPos(numberRad[3]);
+        for (var i = 1; i < numbers.length; i++) {
+            ctx.beginPath();
+            ctx.strokeStyle = colors[numbers[i-1]];
+            ctx.moveTo(oldPos[0], oldPos[1]);
+            var newPos = getPos(numberRad[numbers[i]]);
+            ctx.lineTo(newPos[0], newPos[1]);
+            numberRad[numbers[i]] = numberRad[numbers[i]] + 0.001;
+            ctx.stroke();
+            oldPos = newPos;
+        }
+        
+        /*ctx.strokeStyle = "blue";
+        ctx.beginPath();
+        var values = new Array(0.5, 1, 1.5, 0);
+        var firstPos = getPos(values[values.length-1]);
+        ctx.moveTo(firstPos[0], firstPsos[1]);
+        for (var i = 0; i < values.length; i++) {
+            var newPos = getPos(values[i]);
+            ctx.lineTo(newPos[0], newPos[1]);
+        }
+        ctx.stroke();*/
+        
+    </script>
+    
+</body>    
+    
+</html>

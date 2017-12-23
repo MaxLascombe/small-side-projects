@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html style="height: 100%;">
+    
+<head>
+    
+</head>
+
+<body style="margin: 0; height: 100%;">
+    
+<div id="ball" style="position: absolute;"></div>
+
+<div id="left" style="position: absolute; left: 0; width: 10px;"></div>
+
+<div id="right" style="position: absolute; right: 0; width: 10px;"></div>
+    
+</body>
+
+<script>
+    
+    var FPS = 24;
+    
+    function byId(id) {
+        return document.getElementById(id);
+    }
+    
+    var screenWidth, screenHeight;
+    
+    var ballRadius = 50;
+    var ball = byId("ball");
+    ball.style.width = ball.style.height = ballRadius * 2 + "px";
+    ball.style.borderRadius = ballRadius + "px";
+    
+    var left = byId("left");
+    var right = byId("right");
+    
+    ball.style.backgroundColor = left.style.backgroundColor = right.style.backgroundColor = "black";
+    
+    var xDisplacement = 0, yDisplacement = 0, speed = 100, xSpeed = speed, ySpeed = speed, paddleHeight, leftTop, righTop;
+    
+    document.body.onload = /*document.body.onresize =*/ function () {
+        screenWidth = document.body.clientWidth - ballRadius * 2;
+        screenHeight = document.body.clientHeight - ballRadius * 2;
+        
+        paddleHeight = screenHeight / 6;
+        left.style.height = right.style.height = paddleHeight + "px";
+        leftTop = rightTop = screenHeight / 2 - screenHeight / 12;
+        left.style.top = right.style.top = leftTop + "px";
+        
+        xDisplacement = screenWidth / 2;
+        yDisplacement = screenHeight / 2;
+        ball.style.left = xDisplacement + "px";
+        ball.style.top = yDisplacement + "px";
+        
+        setInterval ("moveBall()", 1000/FPS);
+    }
+    
+    var percentageSpeedIncreasePerBounce = .02;
+    function moveBall () {
+        xDisplacement += xSpeed / FPS;
+        yDisplacement += ySpeed / FPS;
+        
+        if (xDisplacement < 10) {
+            xDisplacement = -xDisplacement + 20;
+            xSpeed = -xSpeed * (1 + percentageSpeedIncreasePerBounce);
+        } else if (xDisplacement > screenWidth - 10) {
+            xDisplacement = 2 * (screenWidth - 10) - xDisplacement;
+            xSpeed = -xSpeed * (1 + percentageSpeedIncreasePerBounce);
+        } if (yDisplacement < 0) {
+            yDisplacement = -yDisplacement;
+            ySpeed = -ySpeed;
+        } else if (yDisplacement > screenHeight) {
+            yDisplacement = 2 * screenHeight - yDisplacement;
+            ySpeed = -ySpeed;
+        }
+        
+        ball.style.left = xDisplacement + "px";
+        ball.style.top = yDisplacement + "px";
+    }
+    
+    document.body.onkeydown = function (e) {
+        if (e.keyCode == 38) {
+            rightTop -= speed;
+        } else if (e.keyCode == 40) {
+            rightTop += speed;
+        } else if (e.keyCode == 83) {
+            leftTop -= speed;
+        } else if (e.keyCode == 87) {
+            leftTop += speed;
+        }
+        
+        if (rightTop < 0) {
+            rightTop = 0;
+        } else if (rightTop > screenHeight - paddleHeight + ballRadius * 2){
+            rightTop = screenHeight - paddleHeight + ballRadius * 2;
+        } if (leftTop < 0) {
+            leftTop = 0;
+        } else if (leftTop > screenHeight - paddleHeight + ballRadius * 2){
+            leftTop = screenHeight - paddleHeight + ballRadius * 2;
+        }
+        
+        left.style.top = leftTop + "px";
+        right.style.top = rightTop + "px";
+    }
+    
+</script>
+
+</html>

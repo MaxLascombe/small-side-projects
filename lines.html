@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html style="width: 100%; height: 100%;">
+
+<body style="background-color: black; width: 100%; height: 100%; margin: 0;">
+    
+    <canvas id="canvas"></canvas>
+    
+    <!--<div id="div" style="background-color: red; width: 100px; height: 100px;"></div>-->
+    
+    <script>
+        
+        var canvas = document.getElementById("canvas");
+        canvas.width = document.body.clientWidth;
+        canvas.height = document.body.clientHeight;
+        
+    </script>
+    
+    <script>
+        
+        function getRandomColor(alpha) {
+            var colorNumbers = new Array();
+            for (var i = 0; i < 3; i++) {
+                var randomNumber = Math.random() * 256;
+                colorNumbers.push(Math.floor(randomNumber));
+            }
+            return "rgba(" + colorNumbers[0] + ", " + colorNumbers[1] + ", " + colorNumbers[2] + ", " + alpha + ")";
+        }
+        
+    </script>
+    
+    <!--<img id="img" style="width: 100px; height: 100px;"></img>-->
+    
+    <script>
+        
+        var lastSide = 0;
+        function getNewRandSide() {
+            var newSide = Math.round(Math.random() * 3);
+            if (newSide == lastSide) newSide = (newSide + 1) % 4;
+            return newSide;
+        }
+        
+        var currentRand = 100;
+        function getXAndYFromSide(side) {
+            var x = -1; var y = -1;
+            switch (side) {
+                case 0:
+                    y = 0; break;
+                case 1:
+                    x = canvas.width; break;
+                case 2:
+                    y = canvas.height; break;
+                case 3:
+                    x = 0; break;
+                default:
+                    break;
+            }
+            if (x == -1) {
+                x = currentRand = Math.random() * canvas.width;
+                
+            } else {
+                y = currentRand = Math.random() * canvas.height;
+            }
+            return new Array(x, y);
+        }
+        
+        var ctx = canvas.getContext("2d");
+        
+        for (var i = 0; i < 7000; i++) {
+            ctx.strokeStyle = getRandomColor(1);
+            ctx.beginPath();
+            var xAndY = getXAndYFromSide(lastSide);
+            var x = xAndY[0]; var y = xAndY[1];
+            ctx.moveTo(x, y);
+            var newSide = getNewRandSide();
+            xAndY = getXAndYFromSide(newSide);
+            lastSide = newSide;
+            x = xAndY[0]; y = xAndY[1];
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+        
+        //document.getElementById("img"). = ctx.getImageData();
+        
+    </script>
+    
+</body>
+
+</html>

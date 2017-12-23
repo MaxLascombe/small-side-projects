@@ -1,0 +1,132 @@
+<html>
+
+<body>
+    
+    <div id="battlefield" style="width: 400px; height: 400px; position: relative;"></div>
+    
+    <div id="score" style="text-align: center; padding: 10px 0; font-size: 20px; font-family: helvetica; font-weight: 300;">Left: <span id="leftScore">0</span> - Right: <span id="rightScore">0</span></div>
+    
+    <div id="scoreBar" style="height: 20px;"><div id="leftScoreBar" style="height: 20px; width: 50%;"></div>
+    
+    <script>
+        
+        var battlefield = document.getElementById("battlefield");
+        var scoreDiv = document.getElementById("score");
+        var leftScoreDiv = document.getElementById("leftScore");
+        var rightScoreDiv = document.getElementById("rightScore");
+        var scoreBar = document.getElementById("scoreBar");
+        var leftScoreBar = document.getElementById("leftScoreBar");
+        
+        scoreDiv.style.width = battlefield.style.width;
+        scoreBar.style.width = battlefield.style.width;
+        
+        var sizeOfWarriors = 8;
+        
+        var verticalNumberOfWarriors = Math.round(battlefield.clientWidth / sizeOfWarriors);
+        var horizontalNumberOfWarriors = Math.round(battlefield.clientHeight / sizeOfWarriors);
+        
+        var leftScore = verticalNumberOfWarriors * horizontalNumberOfWarriors / 2;
+        leftScoreDiv.innerHTML = leftScore;
+        var rightScore = verticalNumberOfWarriors * horizontalNumberOfWarriors / 2;
+        rightScoreDiv.innerHTML = rightScore;
+        
+        var warriors = new Array(verticalNumberOfWarriors);
+        var warriorDivs = new Array(warriors.length);
+        
+        var firstColor = "#65ED53";
+        var secondColor = "#9A20B3";
+        
+        leftScoreBar.style.backgroundColor = firstColor;
+        scoreBar.style.backgroundColor = secondColor;
+        
+        for (var i = 0; i < warriors.length; i++) {
+            warriors[i] = new Array(horizontalNumberOfWarriors);
+            warriorDivs[i] = new Array(warriors.length);
+            
+            for (var j = 0; j < warriors[i].length; j++) {
+                warriorDivs[i][j] = document.createElement("div");
+                warriorDivs[i][j].style.width = parseInt(battlefield.style.width.replace("px", "")) / warriors[i].length + "px";
+                warriorDivs[i][j].style.height = parseInt(battlefield.style.height.replace("px", "")) / warriors.length + "px";
+                warriorDivs[i][j].style.position = "absolute";
+                warriorDivs[i][j].style.top = i*parseInt(battlefield.style.height.replace("px", "")) / warriors.length + "px";
+                warriorDivs[i][j].style.left = j*parseInt(battlefield.style.width.replace("px", "")) / warriors[i].length + "px";
+                warriorDivs[i][j].style.backgroundColor = "10px";
+                
+                if (j < warriors[i].length / 2) {
+                    warriors[i][j] = 0;
+                    warriorDivs[i][j].style.backgroundColor = firstColor;
+                } else {
+                    warriors[i][j] = 1;
+                    warriorDivs[i][j].style.backgroundColor = secondColor;
+                }
+                
+                battlefield.appendChild(warriorDivs[i][j]);
+            }
+        }
+        
+        function whoWins () {
+            var rand = Math.random();
+            var firstAdvantage = 0;
+            var finalNumberToRound = rand-firstAdvantage;
+            if (finalNumberToRound > 1) {
+                finalNumberToRound = 1;
+            }
+            return Math.round(finalNumberToRound);
+        }
+        
+        function getColorFromNumber(number) {
+            if (number) {
+                return secondColor;
+            } else {
+                return firstColor;
+            }
+        }
+        
+        var interval = 0;
+        interval = setInterval("startWar()", 40);
+        
+        function changeScore(winner) {
+            if (winner) {
+                leftScore--; rightScore++;
+            } else {
+                leftScore++; rightScore--;
+            }
+            leftScoreDiv.innerHTML = leftScore;
+            rightScoreDiv.innerHTML = rightScore;
+            leftScoreBar.style.width = Math.floor(leftScore / (leftScore + rightScore) * 100) + "%";
+        }
+        
+        function startWar() {
+            for (var i = 0; i < warriors.length; i++) {
+                for (var j = 0; j < warriors[i].length; j++) {
+                    if (i > 0 && warriors[i][j] != warriors[i-1][j]) {
+                        warriors[i][j] = warriors[i-1][j] = whoWins();
+                        warriorDivs[i][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        warriorDivs[i-1][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        changeScore(warriors[i][j]);
+                    } if (i < 25 && warriors[i][j] != warriors[i+1][j]) {
+                        warriors[i][j] = warriors[i+1][j] = whoWins();
+                        warriorDivs[i][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        warriorDivs[i+1][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        changeScore(warriors[i][j]);
+                    } if (j > 0 && warriors[i][j] != warriors[i][j-1]) {
+                        warriors[i][j] = warriors[i][j-1] = whoWins();
+                        warriorDivs[i][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        warriorDivs[i][j-1].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        changeScore(warriors[i][j]);
+                    }
+                    if (j < 25 && warriors[i][j] != warriors[i][j+1]) {
+                        warriors[i][j] = warriors[i][j+1] = whoWins();
+                        warriorDivs[i][j].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        warriorDivs[i][j+1].style.backgroundColor = getColorFromNumber(warriors[i][j]);
+                        changeScore(warriors[i][j]);
+                    }
+                }
+            }
+        }
+        
+    </script>
+    
+</body>
+
+</html>

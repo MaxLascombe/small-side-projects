@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html style="height: 100%; width: 100%;">
+    
+    <head>
+        
+        <style>
+            
+            html, body {margin: 0; background-color: black; height: 100%;}
+            .satellite {border-radius: 50%; background-color: white; position: absolute;}
+            .satelliteTrace {border-radius: 50%; background-color: rgba(255, 255, 255, 0.5); position: absolute;}
+            
+        </style>
+        
+    </head>
+    
+    <body style="height: 100%; width: 100%;"></body>
+        
+        <script>
+            
+            function satellite (mass, x, y, xs, ys) {
+                this.mass = mass;
+                this.xCoor = x;
+                this.yCoor = y;
+                this.xSpeed = xs;
+                this.ySpeed = ys;
+                this.exists = true;
+                this.isMouse = false;
+            }
+            
+            var satellites = [/*new satellite(100, document.body.clientWidth / 2, document.body.clientHeight / 2, 0, 0)*/];
+            //satellites[0]["isMouse"] = true;
+            
+            var FPS = 30;
+            var massPerUnitVolume = 0.01;
+            
+            document.body.onload = function () {
+                
+                for (var i = 0; i < satellites.length; i++) {
+                    
+                    var currentSatellite = satellites[i];
+                    
+                    var newDiv = document.createElement("div");
+                    
+                    newDiv.id = i + "";
+                    newDiv.className = "satellite";
+                    
+                    var currentWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                    newDiv.style.width = currentWidth + "px";
+                    newDiv.style.height = newDiv.style.width;
+                    newDiv.style.left = currentSatellite.xCoor - currentWidth / 2 + "px";
+                    newDiv.style.top = currentSatellite.yCoor - currentWidth / 2 + "px";
+                    
+                    document.body.appendChild(newDiv);
+                    
+                }
+                
+                setInterval ("moveSatellites()", 1000 / FPS);
+                
+            }
+            
+            var incement = 0;
+            
+            function moveSatellites () {
+                
+                incement++;
+                
+                for (var i = 0; i < satellites.length; i++) {
+                    
+                    var currentSatellite = satellites[i];
+                    
+                    if (incement % 25 == 0) {
+                        
+                        /*var screenWidth = document.body.clientWidth;
+                        var screenHeight = document.body.clientHeight;
+                        
+                        var randX = Math.random() * screenWidth;
+                        var randY = Math.random() * screenHeight;
+                        
+                        satellites.push(new satellite(500, randX, randY, 0, 0));
+                        
+                        var currentSatellite = satellites[satellites.length-1];
+                        
+                        var newDiv = document.createElement("div");
+                        
+                        newDiv.id = satellites.length - 1 + "";
+                        newDiv.className = "satellite";
+                        
+                        var currentWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                        newDiv.style.width = currentWidth + "px";
+                        newDiv.style.height = newDiv.style.width;
+                        newDiv.style.left = currentSatellite.xCoor - currentWidth / 2 + "px";
+                        newDiv.style.top = currentSatellite.yCoor - currentWidth / 2 + "px";
+                        
+                        document.body.appendChild(newDiv);*/
+                        
+                        /*var newDiv = document.createElement("div");
+                        
+                        newDiv.className = "satelliteTrace";
+                        
+                        var currentWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                        newDiv.style.width = currentWidth + "px";
+                        newDiv.style.height = newDiv.style.width;
+                        newDiv.style.left = currentSatellite.xCoor - currentWidth / 2 + "px";
+                        newDiv.style.top = currentSatellite.yCoor - currentWidth / 2 + "px";
+                        
+                        document.body.appendChild(newDiv);*/
+                    }
+                    
+                    if (!currentSatellite.exists || currentSatellite.isMouse) {
+                        continue;
+                    }
+                    
+                    var xAcceleration = 0;
+                    var yAcceleration = 0;
+                    
+                    for (var j = 0; j < satellites.length; j++) {
+                        
+                        var currentSatellite2 = satellites[j];
+                        
+                        if (!currentSatellite2.exists || i==j) {
+                            continue;
+                        }
+                        
+                        var acceleration = currentSatellite2.mass * massPerUnitVolume;
+                        
+                        var xDistance = currentSatellite2.xCoor - currentSatellite.xCoor;
+                        var yDistance = currentSatellite2.yCoor - currentSatellite.yCoor;
+                        
+                        var distance = Math.sqrt(yDistance * yDistance + xDistance * xDistance);
+                        
+                        //check if satellites touch
+                        var currentSatelliteWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                        var currentSatellite2Width = Math.round(Math.cbrt(currentSatellite2.mass));
+                        var minDistance = (currentSatelliteWidth + currentSatellite2Width) / 2;
+                        
+                        if (distance < minDistance) {
+                            currentSatellite2.exists = false;
+                            
+                            x1Momentum = currentSatellite.mass * currentSatellite.xSpeed;
+                            y1Momentum = currentSatellite.mass * currentSatellite.ySpeed;
+                            x2Momentum = currentSatellite2.mass * currentSatellite2.xSpeed;
+                            y2Momentum = currentSatellite2.mass * currentSatellite2.ySpeed;
+                            
+                            currentSatellite.mass += currentSatellite2.mass;
+                            
+                            newXSpeed = (x1Momentum + x2Momentum) / currentSatellite.mass;
+                            newYSpeed = (y1Momentum + y2Momentum) / currentSatellite.mass;
+                            
+                            currentSatellite.xSpeed = newXSpeed;
+                            currentSatellite.ySpeed = newYSpeed;
+                            
+                            var currentSatelliteDiv = document.getElementById(i + "");
+                            
+                            var currentWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                            currentSatelliteDiv.style.width = currentWidth + "px";
+                            currentSatelliteDiv.style.height = currentSatelliteDiv.style.width;
+                            currentSatelliteDiv.style.left = currentSatellite.xCoor - currentWidth / 2 + "px";
+                            currentSatelliteDiv.style.top = currentSatellite.yCoor - currentWidth / 2 + "px";
+                            
+                            document.getElementById(j + "").style.display = "none";
+                            
+                            continue;
+                        }
+                        
+                        currentSatellite.xSpeed = currentSatellite.xSpeed + acceleration * xDistance / distance / FPS;
+                        currentSatellite.ySpeed = currentSatellite.ySpeed + acceleration * yDistance / distance / FPS;
+                        
+                    }
+                    
+                    currentSatellite.xCoor = currentSatellite.xCoor + currentSatellite.xSpeed;
+                    currentSatellite.yCoor = currentSatellite.yCoor + currentSatellite.ySpeed;
+                    
+                    var satelliteDiv = document.getElementById(i + "");
+                    
+                    satelliteDiv.style.left = currentSatellite.xCoor + "px";
+                    satelliteDiv.style.top = currentSatellite.yCoor + "px";
+                    
+                }
+                
+            }
+            
+            document.body.onmousemove = function (e) {
+                var x = e.clientX;
+                var y = e.clientY;
+            }
+            
+            window.onclick = function (event) {
+                
+                var x = event.clientX;
+                var y = event.clientY;
+                
+                satellites.push(new satellite(10, x, y, 0, 0));
+                
+                var currentSatellite = satellites[satellites.length-1];
+                
+                var newDiv = document.createElement("div");
+                
+                newDiv.id = satellites.length - 1 + "";
+                newDiv.className = "satellite";
+                
+                var currentWidth = Math.round(Math.cbrt(currentSatellite.mass));
+                newDiv.style.width = currentWidth + "px";
+                newDiv.style.height = newDiv.style.width;
+                newDiv.style.left = currentSatellite.xCoor - currentWidth / 2 + "px";
+                newDiv.style.top = currentSatellite.yCoor - currentWidth / 2 + "px";
+                
+                document.body.appendChild(newDiv);
+                
+            }
+            
+        </script>
+
+</html>
