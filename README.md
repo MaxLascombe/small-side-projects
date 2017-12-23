@@ -20,7 +20,7 @@ After being inspired from a similar art piece, I wanted to make a program that b
 
 ## Pong (pong.html)
 
-A very basic game of pong.
+A very basic game of pong. The paddles move with s/w and the up/down keys.
 
 ## War (war.html)
 
