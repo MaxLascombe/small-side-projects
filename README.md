@@ -6,13 +6,17 @@ This repository contains a bunch of projects I made as fun side projects. Most a
 
 Project to simulate the interaction of masses in space. I programmed the laws of gravity and momentum to displace the different masses on the screen and have them collide. (Note: click anywhere on screen to add a new mass.)
 
-## π (pi.html)
+## Image editor (img_editor.html)
 
-After being inspired from a similar art piece, I wanted to make a program that broke down the digits of π into colors (each number 0-9 has its own color). A line is then added between the colors of two consecutive digits, to make this cool looking design.
+In this project, I just wanted to play around with programming an image editor / paint equivalent for mac that works directly in a browser.
 
 ## Lines (lines.html)
 
 After making the π project, I wanted to keep working with a similar idea. This project fills the screen with random lines of random color.
+
+## π (pi.html)
+
+After being inspired from a similar art piece, I wanted to make a program that broke down the digits of π into colors (each number 0-9 has its own color). A line is then added between the colors of two consecutive digits, to make this cool looking design.
 
 ## War (war.html)
 
